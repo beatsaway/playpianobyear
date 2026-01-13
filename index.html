@@ -1,0 +1,1672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Play by Ear - Video Learning</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --space-1: 8px;
+            --space-2: 16px;
+            --space-3: 24px;
+            --space-4: 32px;
+            --space-5: 40px;
+            --space-6: 48px;
+            
+            --color-bg: #ffffff;
+            --color-surface: #f8f8f8;
+            --color-text: #000000;
+            --color-text-secondary: #666666;
+            --color-text-tertiary: #999999;
+            --color-border: #e0e0e0;
+            
+            --color-youtube: #ff0000;
+            --color-youtube-hover: #cc0000;
+            --color-header-bg: #000000;
+            --color-header-text: #ffffff;
+            --color-menu-bg: #2a2a2a;
+            --color-menu-hover: #3a3a3a;
+            --color-active: rgba(0, 102, 204, 0.1);
+            --color-progress: linear-gradient(90deg, #4ade80, #22c55e, #16a34a);
+            
+            --max-width: 1200px;
+            --header-height: 40px;
+            --selector-height: 40px;
+            --tabs-height: 40px;
+            
+            --transition-fast: 0.15s ease;
+            --transition-base: 0.2s ease;
+            --transition-slow: 0.3s ease;
+            
+            --z-header: 101;
+            --z-dropdown: 1001;
+            --z-title: 98;
+            --z-footer: 97;
+        }
+
+        body {
+            background: var(--color-bg);
+            color: var(--color-text);
+            line-height: 1.4;
+            font-family: 'Noto Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: var(--z-header);
+            background: var(--color-header-bg);
+            color: var(--color-header-text);
+            padding: var(--space-1) var(--space-2);
+            border-bottom: 1px solid var(--color-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: var(--space-2);
+        }
+
+        .header-left {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .header-label {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .header-label .youtube-badge {
+            position: relative;
+            width: 28px;
+            height: 20px;
+            background: var(--color-youtube);
+            border-radius: 50% / 11%;
+            display: inline-block;
+            vertical-align: middle;
+            flex-shrink: 0;
+            cursor: pointer;
+            transition: opacity var(--transition-base);
+        }
+
+        .header-label .youtube-badge:hover {
+            opacity: 0.8;
+        }
+
+        .header-label .youtube-badge::before {
+            content: '';
+            position: absolute;
+            top: 10%;
+            right: -5%;
+            bottom: 10%;
+            left: -4.5%;
+            background: inherit;
+            border-radius: 5% / 50%;
+        }
+
+        .header-label .youtube-badge::after {
+            content: '▶';
+            position: absolute;
+            z-index: 1;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--color-header-text);
+            font-size: 10px;
+            line-height: 1;
+        }
+
+        .header-copyright {
+            font-size: 9px;
+            color: var(--color-text-secondary);
+        }
+
+        .header-copyright a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .header-copyright a:hover {
+            opacity: 0.7;
+        }
+
+        .video-selector-wrapper {
+            position: relative;
+            flex: 1;
+            width: 70vw;
+            max-width: 70vw;
+        }
+        
+        body.has-header .video-selector-wrapper {
+            top: 0;
+        }
+
+        .video-selector-bar {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            padding: calc(var(--space-1) * 0.75) var(--space-1);
+            font-size: 14px;
+            font-weight: 400;
+            color: var(--color-header-text);
+            letter-spacing: 0.02em;
+            line-height: 1.3;
+            transition: opacity var(--transition-base);
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .video-selector-bar:hover {
+            opacity: 0.8;
+        }
+
+
+        .video-selector-title {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            gap: var(--space-1);
+            align-items: center;
+        }
+
+        .video-selector-title .ctitle,
+        .video-selector-title .etitle {
+            flex: 1;
+            color: var(--color-header-text);
+        }
+
+        .video-selector-title .ctitle {
+            text-align: right;
+        }
+
+        .video-selector-title .separator {
+            color: rgba(255, 255, 255, 0.6);
+            flex-shrink: 0;
+            padding: 0 var(--space-1);
+        }
+
+        .video-selector-title .etitle {
+            text-align: left;
+        }
+
+        .video-selector-arrow {
+            margin-left: var(--space-2);
+            flex-shrink: 0;
+        }
+
+        .video-selector-menu {
+            position: absolute;
+            top: calc(100% + var(--space-1));
+            left: 0;
+            width: 70vw;
+            max-width: 70vw;
+            background: var(--color-menu-bg);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: var(--z-dropdown);
+            display: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .video-selector-menu.active {
+            display: block;
+        }
+
+        .video-selector-option {
+            padding: calc(var(--space-1) * 0.75) var(--space-1);
+            cursor: pointer;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            justify-content: space-between;
+            gap: var(--space-1);
+            align-items: center;
+            transition: background var(--transition-fast);
+            font-size: 14px;
+            color: var(--color-header-text);
+        }
+
+        .video-selector-option:last-child {
+            border-bottom: none;
+        }
+
+        .video-selector-option:hover {
+            background: var(--color-menu-hover);
+        }
+
+        .video-selector-option .ctitle,
+        .video-selector-option .etitle {
+            flex: 1;
+            color: var(--color-header-text);
+        }
+
+        .video-selector-option .ctitle {
+            text-align: right;
+        }
+
+        .video-selector-option .separator {
+            color: rgba(255, 255, 255, 0.6);
+            flex-shrink: 0;
+            padding: 0 var(--space-1);
+        }
+
+        .video-selector-option .etitle {
+            text-align: left;
+        }
+
+        main {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 var(--space-2) var(--space-2);
+            padding-bottom: calc(var(--space-2) + 60px); /* Extra padding for sticky footer */
+        }
+
+        .tabs {
+            position: relative;
+            z-index: 99;
+            display: flex;
+            gap: var(--space-1);
+            border-bottom: 1px solid var(--color-border);
+            margin-bottom: var(--space-1);
+            background: var(--color-bg);
+            margin-top: 0;
+            max-width: var(--max-width);
+            margin-left: auto;
+            margin-right: auto;
+            padding: 0 var(--space-2);
+        }
+
+        #tabsContainer {
+            display: none;
+        }
+
+        .tab {
+            padding: var(--space-1) var(--space-2);
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            font-size: 14px;
+            color: var(--color-text-secondary);
+            transition: all var(--transition-base);
+            margin-bottom: -1px;
+        }
+
+        .tab:hover {
+            color: var(--color-text);
+            background: var(--color-surface);
+        }
+
+        .tab.active {
+            color: var(--color-text);
+            border-bottom-color: var(--color-text);
+            font-weight: 500;
+        }
+
+
+        .transcript-container {
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+            border: 0;
+            padding: var(--space-1);
+            margin-top: var(--space-1);
+            background: var(--color-bg);
+        }
+        
+        .watch-video-button {
+            display: inline-block;
+            padding: var(--space-1) var(--space-3);
+            margin-bottom: var(--space-2);
+            background: var(--color-youtube);
+            color: var(--color-header-text);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all var(--transition-base);
+        }
+        
+        .watch-video-button:hover {
+            background: var(--color-youtube-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .watch-video-button:active {
+            transform: translateY(0);
+        }
+        
+        .summary-section {
+            display: none;
+            border: 0;
+            padding: var(--space-1);
+            margin-top: var(--space-1);
+            background: var(--color-bg);
+            color: var(--color-text);
+            position: relative;
+        }
+
+        .summary-items-container {
+            position: relative;
+            z-index: 1;
+            margin-top: 0;
+            padding-top: var(--space-1);
+        }
+
+        .summary-section-title + .summary-items-container {
+            margin-top: 0;
+        }
+        
+        .summary-section.active {
+            display: block;
+        }
+
+        .transcript-item {
+            padding: calc(var(--space-1) * 0.5) var(--space-1);
+            border-bottom: 1px solid var(--color-border);
+            cursor: pointer;
+            transition: background var(--transition-base);
+        }
+        
+        .transcript-item:last-child {
+            border-bottom: none;
+        }
+
+        .transcript-item:hover {
+            background: var(--color-surface);
+        }
+        
+        .summary-item {
+            padding: calc(var(--space-1) * 0.25) 0;
+            color: var(--color-text);
+        }
+
+        .transcript-item.active {
+            background: var(--color-active);
+        }
+
+        .transcript-time {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            margin-right: var(--space-1);
+            font-weight: 500;
+        }
+
+        .transcript-text {
+            display: inline-block;
+        }
+
+        .transcript-translation {
+            display: block;
+            margin-top: calc(var(--space-1) * 0.5);
+            font-size: 14px;
+            color: var(--color-text-secondary);
+        }
+
+        .transcript-translation.show {
+            display: block;
+        }
+
+
+
+        .summary-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-1) 0;
+            border-top: 1px solid var(--color-border);
+            margin-top: var(--space-1);
+        }
+
+        .summary-nav-button {
+            padding: var(--space-1) var(--space-3);
+            background: var(--color-surface);
+            border: 1px solid var(--color-border);
+            cursor: pointer;
+            font-size: 14px;
+            color: var(--color-text);
+            transition: all var(--transition-base);
+            border-radius: 4px;
+        }
+
+        .summary-nav-button:hover:not(:disabled) {
+            background: var(--color-text);
+            color: var(--color-bg);
+            border-color: var(--color-text);
+        }
+
+        .summary-nav-button:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .summary-counter {
+            font-size: 14px;
+            color: var(--color-text-secondary);
+            margin-left: var(--space-1);
+        }
+
+
+        .summary-item {
+            display: block;
+            visibility: hidden;
+            color: var(--color-text);
+        }
+
+        .summary-item.revealed {
+            visibility: visible;
+        }
+
+        .summary-item .char {
+            opacity: 0;
+            animation: charReveal 0.01s forwards;
+        }
+
+        @keyframes charReveal {
+            to {
+                opacity: 1;
+            }
+        }
+
+        .summary-item.hidden {
+            opacity: 0.5;
+        }
+
+        .summary-item.hidden:hover {
+            opacity: 0.8;
+        }
+
+        .summary-item-placeholder {
+            padding: var(--space-1);
+            margin: calc(var(--space-1) * 0.5) 0;
+            color: var(--color-text-secondary);
+            font-style: italic;
+            cursor: pointer;
+            text-align: left;
+            border: 1px dashed var(--color-border);
+            border-radius: 4px;
+            transition: all var(--transition-base);
+            display: none;
+        }
+        
+        .summary-item-placeholder:hover {
+            background: var(--color-surface);
+            border-color: var(--color-text-secondary);
+        }
+        
+        .summary-reveal-footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: var(--z-footer);
+            background: transparent;
+            padding: var(--space-2);
+            display: none;
+            pointer-events: none;
+        }
+        
+        .summary-reveal-footer.visible {
+            display: block;
+        }
+        
+        .summary-reveal-footer-content {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto;
+            background: var(--color-header-bg);
+            color: var(--color-header-text);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 16px;
+            transition: all var(--transition-base);
+            pointer-events: auto;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .summary-reveal-footer-content.pulsing {
+            animation: pulseCircle 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulseCircle {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            }
+            50% {
+                transform: scale(1.1);
+                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+            }
+        }
+        
+        .summary-reveal-footer-content:hover:not(.revealing) {
+            background: #333333;
+            transform: scale(1.05);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+        }
+        
+        .summary-reveal-footer-content.pulsing:hover {
+            animation: none;
+        }
+        
+        .summary-reveal-footer-content:active:not(.revealing) {
+            transform: scale(0.95);
+        }
+        
+        .summary-reveal-footer-content.revealing {
+            background: #666666;
+            color: #cccccc;
+            opacity: 0.6;
+            cursor: not-allowed;
+            pointer-events: none;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+        
+        .summary-reveal-footer-content.revealing:hover {
+            transform: scale(1);
+        }
+        
+
+
+        .summary-section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-1);
+            border-bottom: 2px solid var(--color-border);
+            padding: var(--space-1);
+            margin-bottom: var(--space-2);
+            position: sticky;
+            top: calc(var(--header-height) + var(--selector-height) + var(--tabs-height));
+            z-index: var(--z-title);
+            background: var(--color-bg);
+            color: var(--color-text);
+            max-width: var(--max-width);
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .summary-progress-bar-container {
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--color-border);
+            overflow: hidden;
+        }
+        
+        .summary-progress-bar-fill {
+            height: 100%;
+            background: var(--color-progress);
+            width: 0%;
+            transition: width var(--transition-slow);
+            box-shadow: 0 0 4px rgba(34, 197, 94, 0.5);
+        }
+
+        .summary-title-nav-button {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: var(--color-text);
+            padding: 0 var(--space-1);
+            transition: all var(--transition-base);
+            line-height: 1;
+        }
+
+        .summary-title-nav-button:hover:not(:disabled) {
+            color: var(--color-text-secondary);
+            transform: scale(1.2);
+        }
+
+        .summary-title-nav-button:disabled {
+            display: none;
+        }
+
+        .summary-title-text {
+            flex: 0 1 auto;
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+        }
+        
+        .summary-title-text:hover {
+            opacity: 0.7;
+        }
+        
+        .summary-sections-dropdown {
+            position: absolute;
+            top: calc(100% + var(--space-1));
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--color-bg);
+            border: 1px solid var(--color-border);
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 1001;
+            min-width: 200px;
+            max-width: 400px;
+            max-height: 400px;
+            overflow-y: auto;
+            display: none;
+        }
+        
+        .summary-sections-dropdown.active {
+            display: block;
+        }
+        
+        .summary-sections-dropdown-item {
+            padding: var(--space-1) var(--space-2);
+            cursor: pointer;
+            border-bottom: 1px solid var(--color-border);
+            transition: background var(--transition-base);
+            font-weight: normal;
+        }
+        
+        .summary-sections-dropdown-item:last-child {
+            border-bottom: none;
+        }
+        
+        .summary-sections-dropdown-item:hover {
+            background: var(--color-surface);
+        }
+        
+        .summary-sections-dropdown-item.active {
+            background: var(--color-active);
+            font-weight: 600;
+        }
+
+        .summary-points {
+            list-style: none;
+            padding-left: 0;
+            color: var(--color-text);
+        }
+
+        .summary-points li {
+            padding: calc(var(--space-1) * 0.5) 0;
+            padding-left: var(--space-2);
+            position: relative;
+            color: var(--color-text);
+        }
+
+        .summary-points li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--color-text-secondary);
+        }
+
+        .summary-chord {
+            margin-bottom: var(--space-1);
+            padding: var(--space-1);
+            background: var(--color-surface);
+            border-left: 3px solid var(--color-text);
+            color: var(--color-text);
+        }
+
+        .summary-chord-name {
+            font-weight: 600;
+            margin-bottom: calc(var(--space-1) * 0.5);
+            color: var(--color-text);
+        }
+
+        .summary-chord-sound {
+            color: var(--color-text-secondary);
+            font-style: italic;
+            margin-bottom: calc(var(--space-1) * 0.5);
+        }
+
+        .summary-subsection {
+            margin-top: var(--space-1);
+            margin-left: var(--space-1);
+            color: var(--color-text);
+        }
+
+        .summary-subsection-title {
+            font-weight: 500;
+            margin-bottom: calc(var(--space-1) * 0.5);
+            color: var(--color-text);
+        }
+
+        .summary-steps {
+            list-style: decimal;
+            padding-left: var(--space-3);
+            color: var(--color-text);
+        }
+
+        .summary-steps li {
+            padding: calc(var(--space-1) * 0.5) 0;
+            color: var(--color-text);
+        }
+
+        .loading {
+            text-align: center;
+            padding: var(--space-2);
+            color: var(--color-text-secondary);
+        }
+
+        /* Mobile-specific fixes for sticky title overlap */
+        @media (max-width: 768px) {
+            .summary-section-title {
+                margin-bottom: var(--space-3);
+            }
+            
+            .summary-items-container {
+                padding-top: var(--space-2);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-left">
+            <span class="header-label">
+                <span class="youtube-badge"></span>
+                <div class="video-selector-wrapper" id="videoSelectorWrapper" style="display: none;">
+                    <div class="video-selector-bar" id="videoSelectorBar">
+                        <div class="video-selector-title">
+                            <span class="ctitle" id="cantoneseTitle"></span>
+                            <span class="separator">•</span>
+                            <span class="etitle" id="englishTitle"></span>
+                        </div>
+                        <span class="video-selector-arrow">▼</span>
+                    </div>
+                    <div class="video-selector-menu" id="videoSelectorMenu"></div>
+                </div>
+            </span>
+        </div>
+    </header>
+
+    <div class="tabs" id="tabsContainer" style="display: none;">
+        <button class="tab active" data-tab="summary">重點</button>
+        <button class="tab" data-tab="transcript">影片</button>
+    </div>
+
+    <main>
+        <!-- Summary sections will be inserted here -->
+
+        <div class="transcript-container" id="transcriptContainer" style="display: none;"></div>
+
+        <div id="loading" class="loading">Select a video to begin</div>
+    </main>
+    
+        <div class="summary-reveal-footer" id="summaryRevealFooter">
+        <div class="summary-reveal-footer-content" id="summaryRevealFooterContent" data-revealing="false">
+            NEXT
+        </div>
+    </div>
+
+    <script src="youtubeexample1_data.js"></script>
+    <script src="youtubeexample2_data.js"></script>
+    <script src="youtubeexample3_data.js"></script>
+    <script src="youtubeexample4_data.js"></script>
+    <script>
+        // State management
+        const state = {
+            currentVideoData: null,
+            currentActiveTime: null,
+            summarySections: [],
+            currentSectionIndex: 0,
+            isRevealing: false
+        };
+
+        // Video data mapping
+        const videoDataMap = {
+            'youtubeexample1': youtubeExample1Data,
+            'youtubeexample2': youtubeExample2Data,
+            'youtubeexample3': youtubeExample3Data,
+            'youtubeexample4': youtubeExample4Data
+        };
+
+        // DOM element cache
+        const elements = {
+            videoSelectorWrapper: () => document.getElementById('videoSelectorWrapper'),
+            videoSelectorBar: () => document.getElementById('videoSelectorBar'),
+            videoSelectorMenu: () => document.getElementById('videoSelectorMenu'),
+            tabsContainer: () => document.getElementById('tabsContainer'),
+            transcriptContainer: () => document.getElementById('transcriptContainer'),
+            loading: () => document.getElementById('loading'),
+            cantoneseTitle: () => document.getElementById('cantoneseTitle'),
+            englishTitle: () => document.getElementById('englishTitle'),
+            summaryRevealFooter: () => document.getElementById('summaryRevealFooter'),
+            summaryRevealFooterContent: () => document.getElementById('summaryRevealFooterContent')
+        };
+
+        // Initialize
+        initializeVideoSelector();
+        window.addEventListener('resize', updateTabsPosition);
+        
+        function updateTabsPosition() {
+            const header = document.querySelector('header');
+            const videoSelector = elements.videoSelectorWrapper();
+            const tabs = elements.tabsContainer();
+            const root = document.documentElement;
+            
+            if (header) {
+                root.style.setProperty('--header-height', `${header.offsetHeight}px`);
+            }
+            
+            const selectorHeight = (videoSelector && videoSelector.style.display !== 'none') 
+                ? videoSelector.offsetHeight 
+                : 0;
+            root.style.setProperty('--selector-height', `${selectorHeight}px`);
+            
+            if (tabs) {
+                root.style.setProperty('--tabs-height', `${tabs.offsetHeight || 40}px`);
+            }
+        }
+
+        window.addEventListener('load', updateTabsPosition);
+        
+        // Load default video
+        if (videoDataMap['youtubeexample1']) {
+            loadVideo(videoDataMap['youtubeexample1']);
+        }
+
+        // YouTube badge click handler
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.youtube-badge') && state.currentVideoData) {
+                const videoUrl = state.currentVideoData.videoUrl || 
+                    `https://www.youtube.com/watch?v=${state.currentVideoData.videoId}`;
+                window.open(videoUrl, '_blank');
+            }
+        });
+
+        // Tab switching
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabName = tab.dataset.tab;
+                
+                // Update active tab
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                // Show/hide content
+                const isSummary = tabName === 'summary';
+                elements.transcriptContainer().style.display = isSummary ? 'none' : 'block';
+                
+                document.querySelectorAll('.summary-section').forEach(section => {
+                    section.style.display = (isSummary && section.classList.contains('active')) ? 'block' : 'none';
+                });
+                
+                // Update footer
+                const footer = elements.summaryRevealFooter();
+                if (isSummary) {
+                    const currentView = document.querySelector('.summary-section.active');
+                    if (currentView) {
+                        updateFooterForSection(parseInt(currentView.dataset.sectionIndex));
+                    }
+                } else {
+                    footer.classList.remove('visible');
+                }
+            });
+        });
+
+        function initializeVideoSelector() {
+            const bar = elements.videoSelectorBar();
+            const menu = elements.videoSelectorMenu();
+            
+            // Create dropdown options
+            Object.entries(videoDataMap).forEach(([key, videoData]) => {
+                const option = document.createElement('div');
+                option.className = 'video-selector-option';
+                option.dataset.key = key;
+                
+                const ctitle = document.createElement('span');
+                ctitle.className = 'ctitle';
+                ctitle.textContent = videoData.cantoneseTitle || '';
+                
+                const separator = document.createElement('span');
+                separator.className = 'separator';
+                separator.textContent = '•';
+                
+                const etitle = document.createElement('span');
+                etitle.className = 'etitle';
+                etitle.textContent = videoData.title || '';
+                
+                option.append(ctitle, separator, etitle);
+                option.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    loadVideo(videoData);
+                    menu.classList.remove('active');
+                });
+                menu.appendChild(option);
+            });
+            
+            // Toggle dropdown
+            bar.addEventListener('click', (e) => {
+                e.stopPropagation();
+                menu.classList.toggle('active');
+            });
+            
+            // Close dropdowns on outside click
+            document.addEventListener('click', (e) => {
+                if (!bar.contains(e.target) && !menu.contains(e.target)) {
+                    menu.classList.remove('active');
+                }
+                if (!e.target.closest('.summary-title-text') && !e.target.closest('.summary-sections-dropdown')) {
+                    document.querySelectorAll('.summary-sections-dropdown').forEach(dd => {
+                        dd.classList.remove('active');
+                    });
+                }
+            });
+        }
+
+        function loadVideo(videoData) {
+            state.currentVideoData = videoData;
+            
+            // Show UI elements
+            elements.tabsContainer().style.display = 'flex';
+            elements.videoSelectorWrapper().style.display = 'block';
+            elements.loading().style.display = 'none';
+            
+            updateTabsPosition();
+            
+            // Update titles
+            elements.cantoneseTitle().textContent = videoData.cantoneseTitle || '';
+            elements.englishTitle().textContent = videoData.title;
+            
+            // Render content
+            renderTranscript();
+            renderSummary();
+            
+            // Show correct tab content
+            const activeTab = document.querySelector('.tab.active');
+            const tabName = activeTab?.dataset.tab || 'transcript';
+            const isSummary = tabName === 'summary';
+            
+            elements.transcriptContainer().style.display = isSummary ? 'none' : 'block';
+            document.querySelectorAll('.summary-section').forEach(section => {
+                section.style.display = (isSummary && section.classList.contains('active')) ? 'block' : 'none';
+            });
+            
+            if (!isSummary) {
+                elements.summaryRevealFooter().classList.remove('visible');
+            }
+        }
+
+        function renderTranscript() {
+            if (!state.currentVideoData) return;
+            
+            const container = elements.transcriptContainer();
+            container.innerHTML = '';
+            
+            // Watch Video button
+            const watchButton = document.createElement('a');
+            watchButton.href = state.currentVideoData.videoUrl || 
+                `https://www.youtube.com/watch?v=${state.currentVideoData.videoId}`;
+            watchButton.target = '_blank';
+            watchButton.rel = 'noopener noreferrer';
+            watchButton.className = 'watch-video-button';
+            watchButton.textContent = '▶ Watch Video on YouTube';
+            container.appendChild(watchButton);
+            
+            // Transcript items
+            state.currentVideoData.transcript.forEach((item, index) => {
+                const itemEl = document.createElement('div');
+                itemEl.className = 'transcript-item';
+                itemEl.dataset.time = item.time;
+                itemEl.dataset.index = index;
+                
+                const timeSpan = document.createElement('span');
+                timeSpan.className = 'transcript-time';
+                timeSpan.textContent = item.time;
+                
+                const textSpan = document.createElement('span');
+                textSpan.className = 'transcript-text';
+                textSpan.textContent = item.text;
+                
+                itemEl.append(timeSpan, textSpan);
+                
+                itemEl.addEventListener('click', () => {
+                    seekToTime(item.time);
+                    container.querySelectorAll('.transcript-item').forEach(el => el.classList.remove('active'));
+                    itemEl.classList.add('active');
+                    state.currentActiveTime = item.time;
+                    itemEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                });
+                
+                container.appendChild(itemEl);
+            });
+        }
+
+        function renderSummary() {
+            if (!state.currentVideoData?.summary) return;
+            
+            const main = document.querySelector('main');
+            main.querySelectorAll('.summary-section').forEach(section => section.remove());
+            
+            const summary = state.currentVideoData.summary;
+            state.summarySections = [];
+            
+            // Collect sections with their items
+            function collectSection(section, parentTitle = '') {
+                if (typeof section !== 'object' || section === null) return null;
+                
+                const sectionTitle = section.title || parentTitle;
+                const items = [];
+                
+                // Collect text (new format - book-like prose)
+                if (section.text && typeof section.text === 'string') {
+                    items.push({
+                        type: 'text',
+                        content: section.text
+                    });
+                }
+                
+                // Collect points (old format - for backward compatibility)
+                if (section.points && Array.isArray(section.points)) {
+                    section.points.forEach(point => {
+                        items.push({
+                            type: 'point',
+                            content: point
+                        });
+                    });
+                }
+                
+                // Collect steps
+                if (section.steps && Array.isArray(section.steps)) {
+                    section.steps.forEach(step => {
+                        items.push({
+                            type: 'step',
+                            content: step
+                        });
+                    });
+                }
+                
+                // Collect chords
+                if (section.chords && Array.isArray(section.chords)) {
+                    section.chords.forEach(chord => {
+                        items.push({
+                            type: 'chord',
+                            chord: chord
+                        });
+                    });
+                    
+                    if (section.coverage) {
+                        items.push({
+                            type: 'coverage',
+                            content: section.coverage
+                        });
+                    }
+                }
+                
+                if (sectionTitle && items.length > 0) {
+                    state.summarySections.push({ title: sectionTitle, items });
+                }
+                
+                // Handle nested objects (subsections)
+                Object.keys(section).forEach(subKey => {
+                    if (subKey !== 'title' && subKey !== 'text' && subKey !== 'points' && subKey !== 'chords' && subKey !== 'steps' && subKey !== 'coverage') {
+                        const subSection = section[subKey];
+                        if (typeof subSection === 'object' && subSection !== null) {
+                            const nested = collectSection(subSection, sectionTitle);
+                            if (nested) {
+                                summarySections.push(nested);
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Collect all sections
+            Object.values(summary).forEach(sectionData => {
+                const collected = collectSection(sectionData);
+                if (collected) {
+                    state.summarySections.push(collected);
+                }
+            });
+            
+            if (state.summarySections.length === 0) return;
+            
+            // Create sections
+            state.summarySections.forEach((section, sectionIndex) => {
+                const sectionDiv = document.createElement('div');
+                sectionDiv.className = 'summary-section';
+                sectionDiv.dataset.sectionIndex = sectionIndex;
+                
+                // Add section title
+                const title = document.createElement('h3');
+                title.className = 'summary-section-title';
+                
+                const titleText = document.createElement('span');
+                titleText.className = 'summary-title-text';
+                titleText.textContent = section.title;
+                
+                // Create dropdown menu for section navigation
+                const dropdown = document.createElement('div');
+                dropdown.className = 'summary-sections-dropdown';
+                dropdown.id = `sectionsDropdown-${sectionIndex}`;
+                
+                // Populate dropdown
+                state.summarySections.forEach((sec, idx) => {
+                    const item = document.createElement('div');
+                    item.className = 'summary-sections-dropdown-item';
+                    item.dataset.sectionIndex = idx;
+                    if (idx === sectionIndex) item.classList.add('active');
+                    item.textContent = sec.title;
+                    item.onclick = (e) => {
+                        e.stopPropagation();
+                        showSummarySection(idx);
+                        dropdown.classList.remove('active');
+                    };
+                    dropdown.appendChild(item);
+                });
+                
+                // Add click handler to titleText to toggle dropdown
+                titleText.onclick = (e) => {
+                    e.stopPropagation();
+                    // Close all other dropdowns
+                    document.querySelectorAll('.summary-sections-dropdown').forEach(dd => {
+                        if (dd !== dropdown) {
+                            dd.classList.remove('active');
+                        }
+                    });
+                    dropdown.classList.toggle('active');
+                };
+                
+                // Add progress bar container
+                const progressBarContainer = document.createElement('div');
+                progressBarContainer.className = 'summary-progress-bar-container';
+                progressBarContainer.id = `progressBar-${sectionIndex}`;
+                
+                const progressBarFill = document.createElement('div');
+                progressBarFill.className = 'summary-progress-bar-fill';
+                progressBarContainer.appendChild(progressBarFill);
+                
+                title.appendChild(titleText);
+                title.appendChild(dropdown);
+                title.appendChild(progressBarContainer);
+                sectionDiv.appendChild(title);
+                
+                // Create container for summary items to ensure they stay below title
+                const itemsContainer = document.createElement('div');
+                itemsContainer.className = 'summary-items-container';
+                sectionDiv.appendChild(itemsContainer);
+                
+                // Group consecutive steps together
+                let currentStepsList = null;
+                let stepItemIndex = 0;
+                let actualItemDivIndex = 0; // Track actual div indices
+                
+                // Create items (initially hidden except first)
+                section.items.forEach((item, itemIndex) => {
+                    // Render based on item type
+                    if (item.type === 'text') {
+                        // Close any open steps list
+                        if (currentStepsList) {
+                            currentStepsList = null;
+                            stepItemIndex = 0;
+                        }
+                        
+                        // Split text into paragraphs using ℗ markers
+                        const paragraphs = item.content.split('℗').map(p => p.trim()).filter(p => p.length > 0);
+                        
+                        // If no markers found, use original text as single paragraph
+                        if (paragraphs.length === 0) {
+                            paragraphs.push(item.content);
+                        }
+                        
+                        // Create a separate revealable item for each paragraph
+                        paragraphs.forEach((paraText, paraIndex) => {
+                            const itemDiv = document.createElement('div');
+                            itemDiv.className = 'summary-item';
+                            itemDiv.dataset.itemIndex = actualItemDivIndex;
+                            
+                            // Create paragraph with dot at the start
+                            const textPara = document.createElement('p');
+                            textPara.style.margin = '0';
+                            textPara.style.padding = 'calc(var(--space-1) * 0.5) 0';
+                            textPara.style.lineHeight = '1.7';
+                            textPara.style.textIndent = '0';
+                            
+                            // Add dot at the start
+                            const dotSpan = document.createElement('span');
+                            dotSpan.textContent = '• ';
+                            dotSpan.style.marginRight = 'calc(var(--space-1) * 0.5)';
+                            textPara.appendChild(dotSpan);
+                            
+                            // Add the paragraph text
+                            const textNode = document.createTextNode(paraText);
+                            textPara.appendChild(textNode);
+                            
+                            itemDiv.appendChild(textPara);
+                            itemsContainer.appendChild(itemDiv);
+                            actualItemDivIndex++;
+                        });
+                    } else if (item.type === 'point') {
+                        // Close any open steps list
+                        if (currentStepsList) {
+                            currentStepsList = null;
+                            stepItemIndex = 0;
+                        }
+                        
+                        const itemDiv = document.createElement('div');
+                        itemDiv.className = 'summary-item';
+                        itemDiv.dataset.itemIndex = actualItemDivIndex;
+                        
+                        const pointsList = document.createElement('ul');
+                        pointsList.className = 'summary-points';
+                        const li = document.createElement('li');
+                        li.textContent = item.content;
+                        pointsList.appendChild(li);
+                        itemDiv.appendChild(pointsList);
+                        itemsContainer.appendChild(itemDiv);
+                        actualItemDivIndex++;
+                    } else if (item.type === 'step') {
+                        // Create or reuse steps list
+                        if (!currentStepsList) {
+                            const itemDiv = document.createElement('div');
+                            itemDiv.className = 'summary-item';
+                            itemDiv.dataset.itemIndex = actualItemDivIndex;
+                            
+                            currentStepsList = document.createElement('ol');
+                            currentStepsList.className = 'summary-steps';
+                            itemDiv.appendChild(currentStepsList);
+                            itemsContainer.appendChild(itemDiv);
+                            actualItemDivIndex++;
+                        }
+                        
+                        const li = document.createElement('li');
+                        li.textContent = item.content;
+                        currentStepsList.appendChild(li);
+                    } else if (item.type === 'chord') {
+                        // Close any open steps list
+                        if (currentStepsList) {
+                            currentStepsList = null;
+                            stepItemIndex = 0;
+                        }
+                        
+                        const itemDiv = document.createElement('div');
+                        itemDiv.className = 'summary-item';
+                        itemDiv.dataset.itemIndex = actualItemDivIndex;
+                        const chordDiv = document.createElement('div');
+                        chordDiv.className = 'summary-chord';
+                        
+                        const name = document.createElement('div');
+                        name.className = 'summary-chord-name';
+                        name.textContent = item.chord.name;
+                        chordDiv.appendChild(name);
+                        
+                        const sound = document.createElement('div');
+                        sound.className = 'summary-chord-sound';
+                        sound.textContent = `聲音：${item.chord.sound}`;
+                        chordDiv.appendChild(sound);
+                        
+                        const desc = document.createElement('div');
+                        desc.textContent = item.chord.description;
+                        chordDiv.appendChild(desc);
+                        
+                        itemDiv.appendChild(chordDiv);
+                        itemsContainer.appendChild(itemDiv);
+                        actualItemDivIndex++;
+                    } else if (item.type === 'coverage') {
+                        // Close any open steps list
+                        if (currentStepsList) {
+                            currentStepsList = null;
+                            stepItemIndex = 0;
+                        }
+                        
+                        const itemDiv = document.createElement('div');
+                        itemDiv.className = 'summary-item';
+                        itemDiv.dataset.itemIndex = actualItemDivIndex;
+                        
+                        const coverageDiv = document.createElement('div');
+                        coverageDiv.style.marginTop = 'var(--space-2)';
+                        coverageDiv.style.fontStyle = 'italic';
+                        coverageDiv.textContent = item.content;
+                        itemDiv.appendChild(coverageDiv);
+                        itemsContainer.appendChild(itemDiv);
+                        actualItemDivIndex++;
+                    }
+                    
+                    // Add placeholder for next hidden item
+                    // For steps: only add placeholder after the last step in a group
+                    // For other types: add placeholder after each item
+                    if (itemIndex < section.items.length - 1) {
+                        const nextItem = section.items[itemIndex + 1];
+                        const shouldAddPlaceholder = 
+                            (item.type === 'step' && nextItem.type !== 'step') ||
+                            (item.type !== 'step');
+                        
+                        if (shouldAddPlaceholder) {
+                            const placeholder = document.createElement('div');
+                            placeholder.className = 'summary-item-placeholder';
+                            placeholder.textContent = 'Click to reveal next item...';
+                            // Use the actual div index for the next item
+                            placeholder.dataset.itemIndex = actualItemDivIndex;
+                            placeholder.style.display = 'none';
+                            itemsContainer.appendChild(placeholder);
+                        }
+                    }
+                });
+                
+                // Close any remaining steps list
+                if (currentStepsList) {
+                    currentStepsList = null;
+                    stepItemIndex = 0;
+                }
+                
+                main.appendChild(sectionDiv);
+            });
+            
+            state.currentSectionIndex = 0;
+            showSummarySection(0);
+        }
+        
+        function isRevealingComplete(element) {
+            const chars = element.querySelectorAll('.char');
+            if (chars.length === 0) return true;
+            
+            return Array.from(chars).every(char => {
+                const opacity = parseFloat(getComputedStyle(char).opacity) || 0;
+                return opacity > 0;
+            });
+        }
+        
+        function handleAnimationCompletion(item, callback) {
+            const chars = item.querySelectorAll('.char');
+            if (chars.length === 0) {
+                callback();
+                return;
+            }
+            
+            const checkInterval = setInterval(() => {
+                if (isRevealingComplete(item)) {
+                    clearInterval(checkInterval);
+                    callback();
+                }
+            }, 50);
+        }
+        
+        function updateFooterForSection(sectionIndex) {
+            const currentView = document.querySelector(`.summary-section[data-section-index="${sectionIndex}"]`);
+            const footer = elements.summaryRevealFooter();
+            const footerContent = elements.summaryRevealFooterContent();
+            
+            if (!currentView || !footer || !footerContent) return;
+            
+            // Find last revealed item
+            const items = Array.from(currentView.querySelectorAll('.summary-item'));
+            const lastRevealedIndex = items.findLastIndex(item => item.classList.contains('revealed'));
+            const nextItemIndex = lastRevealedIndex + 1;
+            const nextItem = currentView.querySelector(`.summary-item[data-item-index="${nextItemIndex}"]`);
+            
+            footer.classList.add('visible');
+            
+            // Check if animation is running
+            const revealedItems = currentView.querySelectorAll('.summary-item.revealed');
+            const isAnimationRunning = Array.from(revealedItems).some(item => !isRevealingComplete(item));
+            const isRevealing = state.isRevealing || footerContent.classList.contains('revealing') || isAnimationRunning;
+            
+            // Helper function to check if text is actually revealing and proceed if not
+            const checkAndProceed = () => {
+                // Re-check if animation is actually running
+                const currentlyRevealing = Array.from(revealedItems).some(item => !isRevealingComplete(item));
+                if (currentlyRevealing || state.isRevealing) {
+                    // Text is still revealing, do nothing
+                    return;
+                }
+                
+                // Text is not revealing, proceed with next action
+                state.isRevealing = false;
+                footerContent.classList.remove('revealing');
+                updateFooterForSection(sectionIndex);
+            };
+            
+            if (isRevealing) {
+                // Even when greyed, allow clicks to check if text is actually revealing
+                footerContent.onclick = checkAndProceed;
+                footerContent.classList.remove('pulsing');
+                footerContent.classList.add('revealing');
+                state.isRevealing = true;
+                return;
+            }
+            
+            // Reset state
+            state.isRevealing = false;
+            footerContent.classList.remove('revealing');
+            
+            // Setup next action
+            if (nextItem && !nextItem.classList.contains('revealed')) {
+                footerContent.onclick = () => {
+                    if (state.isRevealing) return;
+                    state.isRevealing = true;
+                    footerContent.classList.remove('pulsing');
+                    footerContent.classList.add('revealing');
+                    footerContent.onclick = null;
+                    revealNextItem(sectionIndex, nextItemIndex);
+                };
+                footerContent.classList.add('pulsing');
+            } else if (sectionIndex < state.summarySections.length - 1) {
+                footerContent.onclick = () => {
+                    if (state.isRevealing) return;
+                    state.isRevealing = true;
+                    footerContent.classList.remove('pulsing');
+                    footerContent.classList.add('revealing');
+                    footerContent.onclick = null;
+                    showSummarySection(sectionIndex + 1);
+                };
+                footerContent.classList.add('pulsing');
+            } else {
+                footer.classList.remove('visible');
+                footerContent.classList.remove('pulsing', 'revealing');
+            }
+        }
+        
+        function showSummarySection(sectionIndex) {
+            const footerContent = elements.summaryRevealFooterContent();
+            
+            if (state.isRevealing) {
+                footerContent.classList.remove('pulsing');
+                footerContent.classList.add('revealing');
+                footerContent.onclick = null;
+            }
+            
+            state.currentSectionIndex = sectionIndex;
+            
+            // Update sections
+            document.querySelectorAll('.summary-section').forEach(section => {
+                section.classList.remove('active');
+                section.style.display = '';
+            });
+            
+            // Update dropdown states
+            document.querySelectorAll('.summary-sections-dropdown-item').forEach(item => {
+                item.classList.toggle('active', parseInt(item.dataset.sectionIndex) === sectionIndex);
+            });
+            
+            document.querySelectorAll('.summary-sections-dropdown').forEach(dd => dd.classList.remove('active'));
+            
+            // Show current section
+            const currentView = document.querySelector(`.summary-section[data-section-index="${sectionIndex}"]`);
+            if (currentView) {
+                currentView.classList.add('active');
+                // CRITICAL: Force section to be visible (override any inline styles from tab switching)
+                currentView.style.display = 'block';
+                
+                // Switch to summary tab if needed
+                const summaryTab = document.querySelector('.tab[data-tab="summary"]');
+                if (summaryTab && !summaryTab.classList.contains('active')) {
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    summaryTab.classList.add('active');
+                    elements.transcriptContainer().style.display = 'none';
+                    document.querySelectorAll('.summary-section').forEach(section => {
+                        section.style.display = section.classList.contains('active') ? 'block' : 'none';
+                    });
+                }
+                
+                // Always reset items in this section - show first item, hide others
+                const items = currentView.querySelectorAll('.summary-item');
+                const placeholders = currentView.querySelectorAll('.summary-item-placeholder');
+                
+                const footerContent = document.getElementById('summaryRevealFooterContent');
+                
+                items.forEach((item, index) => {
+                    if (index === 0) {
+                        if (footerContent) {
+                            state.isRevealing = true;
+                            footerContent.classList.remove('pulsing');
+                            footerContent.classList.add('revealing');
+                        }
+                        
+                        item.classList.add('revealed');
+                        setTimeout(() => item.scrollIntoView({ behavior: 'smooth', block: 'center' }), 50);
+                        animateTextCharacterByCharacter(item);
+                        
+                        handleAnimationCompletion(item, () => {
+                            state.isRevealing = false;
+                            if (footerContent) footerContent.classList.remove('revealing');
+                            updateFooterForSection(sectionIndex);
+                        });
+                    } else {
+                        item.classList.remove('revealed');
+                        // Reset character spans
+                        item.querySelectorAll('.char').forEach(char => {
+                            const textNode = document.createTextNode(char.textContent);
+                            char.parentNode.replaceChild(textNode, char);
+                        });
+                        item.normalize();
+                    }
+                });
+                
+                if (!state.isRevealing) {
+                    updateFooterForSection(sectionIndex);
+                }
+                
+                // Hide all inline placeholders
+                placeholders.forEach((placeholder) => {
+                    placeholder.style.display = 'none';
+                });
+                
+                // Update progress bar
+                updateProgressBar(sectionIndex);
+            }
+        }
+        
+        function updateProgressBar(sectionIndex) {
+            const totalSections = state.summarySections.length;
+            if (totalSections === 0) return;
+            
+            const percentage = ((sectionIndex + 1) / totalSections) * 100;
+            document.querySelectorAll('.summary-progress-bar-fill').forEach(bar => {
+                bar.style.width = `${percentage}%`;
+            });
+        }
+        
+        function animateTextCharacterByCharacter(element) {
+            // Only process if not already processed
+            if (element.querySelector('.char')) return;
+            
+            const textNodes = [];
+            
+            function collectTextNodes(node) {
+                if (node.nodeType === Node.TEXT_NODE) {
+                    textNodes.push(node);
+                } else if (node.nodeType === Node.ELEMENT_NODE) {
+                    // Skip certain elements
+                    if (node.tagName === 'OL' || node.tagName === 'UL' || node.tagName === 'LI') {
+                        Array.from(node.childNodes).forEach(child => collectTextNodes(child));
+                    } else {
+                        Array.from(node.childNodes).forEach(child => collectTextNodes(child));
+                    }
+                }
+            }
+            
+            collectTextNodes(element);
+            
+            textNodes.forEach(node => {
+                const text = node.textContent;
+                if (text && text.trim()) {
+                    const fragment = document.createDocumentFragment();
+                    let delay = 0;
+                    
+                    for (let i = 0; i < text.length; i++) {
+                        const span = document.createElement('span');
+                        span.className = 'char';
+                        span.textContent = text[i];
+                        span.style.animationDelay = `${delay}ms`;
+                        span.style.opacity = '0'; // Start invisible
+                        fragment.appendChild(span);
+                        delay += 30; // 30ms between characters
+                    }
+                    
+                    node.parentNode.replaceChild(fragment, node);
+                }
+            });
+        }
+        
+        function revealNextItem(sectionIndex, itemIndex) {
+            const footerContent = elements.summaryRevealFooterContent();
+            const sectionView = document.querySelector(`.summary-section[data-section-index="${sectionIndex}"]`);
+            const item = sectionView?.querySelector(`.summary-item[data-item-index="${itemIndex}"]`);
+            
+            if (!item) {
+                state.isRevealing = false;
+                if (footerContent) footerContent.classList.remove('revealing');
+                return;
+            }
+            
+            state.isRevealing = true;
+            if (footerContent) {
+                footerContent.classList.remove('pulsing');
+                footerContent.classList.add('revealing');
+                footerContent.onclick = null;
+            }
+            
+            animateTextCharacterByCharacter(item);
+            void item.offsetHeight; // Force reflow
+            item.classList.add('revealed');
+            
+            setTimeout(() => item.scrollIntoView({ behavior: 'smooth', block: 'center' }), 50);
+            
+            handleAnimationCompletion(item, () => {
+                state.isRevealing = false;
+                if (footerContent) footerContent.classList.remove('revealing');
+                updateFooterForSection(sectionIndex);
+            });
+            
+            updateProgressBar(sectionIndex);
+        }
+
+        function seekToTime(timeString) {
+            if (!state.currentVideoData) return;
+            
+            const parts = timeString.split(':');
+            let seconds = 0;
+            if (parts.length === 2) {
+                seconds = parseInt(parts[0]) * 60 + parseInt(parts[1]);
+            } else if (parts.length === 3) {
+                seconds = parseInt(parts[0]) * 3600 + parseInt(parts[1]) * 60 + parseInt(parts[2]);
+            }
+            
+            const videoUrl = state.currentVideoData.videoUrl || 
+                `https://www.youtube.com/watch?v=${state.currentVideoData.videoId}`;
+            window.open(`${videoUrl}&t=${seconds}s`, '_blank');
+        }
+    </script>
+</body>
+</html>
